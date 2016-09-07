@@ -6,7 +6,9 @@ python:
 before_install:
     - pip install vk
     - pip install redis
+    - pip install python-coveralls
     - pip install coveralls
+    - pip install nose
     
     
 services:
