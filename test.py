@@ -1,7 +1,5 @@
 #simple init test
-
-def func(x):
-    return x + 1
+import test_func;
 
 def test_answer():
-    assert func(3) == 4
+    assert test_func.func(3) == 4
