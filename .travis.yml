@@ -14,7 +14,7 @@ services:
     
 script:
     - python setup.py install
-    - coverage run --source=geography-game-vk-bot test.py test
+    - coverage run --source=geography-game-vk-bot setup.py test
     
 after_success:
   coveralls
