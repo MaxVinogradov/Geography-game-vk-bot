@@ -3,13 +3,7 @@ python:
     - 3.4
     - 3.5
 before_install:
-   # - pip install pytest pytest-cov
     - pip install vk
     - pip install redis
-    - pip install nose coverage
-    - pip install coveralls
-script:
-  - python setup.py nosetests --with-coverage --cover-package pypiview
-
-after_sucess:
-  coveralls
+services:
+  - redis-server
