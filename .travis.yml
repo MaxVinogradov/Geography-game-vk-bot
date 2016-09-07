@@ -6,12 +6,14 @@ python:
 before_install:
     - pip install vk
     - pip install redis
+    - pip install pytest pytest-cov
     - pip install coveralls
     
 services:
     - redis-server
     
 script:
+    - test.py
     - coverage run --source=geography-game-vk-bot test.py
     
 after_success:
