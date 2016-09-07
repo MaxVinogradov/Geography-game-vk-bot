@@ -2,8 +2,17 @@ language: python
 python:
     - 3.4
     - 3.5
+    
 before_install:
     - pip install vk
     - pip install redis
+    - pip install coveralls
+    
 services:
-  - redis-server
+    - redis-server
+    
+script:
+    - coverage run --source=geography-game-vk-bot test.py
+    
+after_success:
+  coveralls
