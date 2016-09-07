@@ -9,4 +9,4 @@
 [![Stories in Ready](https://badge.waffle.io/MaxVinogradov/Geography-game-vk-bot.png?label=ready&title=Ready)](https://waffle.io/MaxVinogradov/Geography-game-vk-bot)
 
 #### Geography-game-vk-bot is a simple bot that can play geography-game with many vk-users at the same time.
->#### To start play with bot user shoud write "start <level>", where level is beetweeen 1 and 10.
+>#### To start play with bot user should write "start <level>", where level is betweeen 1 and 10.
