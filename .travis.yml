@@ -8,10 +8,12 @@ before_install:
     - pip install redis
     - pip install coveralls
     
+    
 services:
     - redis-server
     
 script:
+    - python setup.py install
     - coverage run --source=geography-game-vk-bot test.py test
     
 after_success:
