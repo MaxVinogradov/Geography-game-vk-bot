@@ -1,67 +1,28 @@
-environment:
-  matrix:
-    - PYTHON: "C:\\Python33"
-      PYTHON_VERSION: "3.3.5"
-      PYTHON_ARCH: "32"
 
-    - PYTHON: "C:\\Python34"
-      PYTHON_VERSION: "3.4.1"
-      PYTHON_ARCH: "32"
-    
-    - PYTHON: "C:\\Python35"
-      PYTHON_VERSION: "3.5.1"
-      PYTHON_ARCH: "32"
+configuration: Release
+platform: Any CPU
 
-
+#---------------------------------#
+#        environment init         #
+#---------------------------------#
 init:
-  - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
+- cmd: set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
 
 install:
-  - "%PYTHON%/Scripts/pip.exe install nose"
-  - "%PYTHON%/Scripts/pip.exe install coverage"
-  - cmd: >-
-      nuget install redis-64 -excludeversion
-      redis-64\tools\redis-server.exe --service-install
-      redis-64\tools\redis-server.exe --service-start
-      
+- cmd: >-
+    nuget install redis-64 -excludeversion
+
+    redis-64\tools\redis-server.exe --service-install
+
+    redis-64\tools\redis-server.exe --service-start
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
 before_build:
-  - ps: >-
-    Invoke-WebRequest "https://github.com/MSOpenTech/redis/releases/download/win-2.8.17.4/redis-2.8.17.zip" -OutFile .\redis-2.8.17.zip;
-
-    $destFolder = "redis-2.8.17";
-
-    $shell = new-object -com shell.application;
-
-
-    $zip = $shell.NameSpace("$pwd\redis-2.8.17.zip");
-
-    if (Test-Path $pwd\$destFolder )
-
-    {
-        del $pwd\$destFolder -Force -Recurse
-    }
-
-    md ".\redis-2.8.17";
-
-    foreach($item in $zip.items())
-
-    {
-        $shell.Namespace("$pwd\redis-2.8.17").copyhere($item);
-    it kind of worked
-
-    cd $destFolder
-
-    .\redis-server.exe --service-install
-
-    .\redis-server.exe --service-start
-
-    cd ..
-  - nuget restore Hangfire.Redis.StackExchange.sln
+- cmd: nuget restore
 
 build:
-  publish_nuget: true
-  publish_nuget_symbols: true
+  project: StackExchange.Redis.Extensions.sln
   verbosity: minimal
-
-test_script:
-  - "%PYTHON%/Scripts/nosetests"
