@@ -6,9 +6,9 @@ environment:
 
   install:
     # Install the Redis
-    - nuget install redis-64 -excludeversion
-    - redis-64\tools\redis-server.exe --service-install
-    - redis-64\tools\redis-server.exe --service-start
+    - "nuget install redis-64 -excludeversion"
+    - "redis-64\tools\redis-server.exe --service-install"
+    - "redis-64\tools\redis-server.exe --service-start"
     - '@ECHO Redis Started'
     # Install additional libs 
     - "%PYTHON%\\python.exe -m pip install wheel"
@@ -18,7 +18,7 @@ environment:
     - "%PYTHON%\\python.exe -m pip install nose"
   
   platform:
-    -x64
+    -"x64"
   
   test_script:
-    - nosetests
+    - "nosetests"
