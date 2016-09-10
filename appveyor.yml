@@ -5,17 +5,18 @@ environment:
     - PYTHON: "C:\\Python35-x64"
 
   install:
-    # Install the Redis
-    - "nuget install redis-64 -excludeversion"
-    - "redis-64\tools\redis-server.exe --service-install"
-    - "redis-64\tools\redis-server.exe --service-start"
-    - '@ECHO Redis Started'
     # Install additional libs 
+    - "%PYTHON%\\python -m pip install --upgrade pip"
     - "%PYTHON%\\python.exe -m pip install wheel"
     - "%PYTHON%\\python.exe -m pip install vk"
     - "%PYTHON%\\python.exe -m pip install python-coveralls"
     - "%PYTHON%\\python.exe -m pip install coveralls"
     - "%PYTHON%\\python.exe -m pip install nose"
+    # Install the Redis
+    - "nuget install redis-64 -excludeversion"
+    - "redis-64\tools\redis-server.exe --service-install"
+    - "redis-64\tools\redis-server.exe --service-start"
+    - '@ECHO Redis Started'
   
   platform:
     -"x64"
