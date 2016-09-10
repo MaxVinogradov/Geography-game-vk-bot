@@ -1,0 +1,24 @@
+environment:
+
+  matrix:
+    - PYTHON: "C:\\Python34-x64"
+    - PYTHON: "C:\\Python35-x64"
+
+  install:
+    # Install the Redis
+    - nuget install redis-64 -excludeversion
+    - redis-64\tools\redis-server.exe --service-install
+    - redis-64\tools\redis-server.exe --service-start
+    - '@ECHO Redis Started'
+    # Install additional libs 
+    - "%PYTHON%\\python.exe -m pip install wheel"
+    - "%PYTHON%\\python.exe -m pip install vk"
+    - "%PYTHON%\\python.exe -m pip install python-coveralls"
+    - "%PYTHON%\\python.exe -m pip install coveralls"
+    - "%PYTHON%\\python.exe -m pip install nose"
+  
+  platform:
+    -x64
+  
+  test_script:
+    - nosetests
