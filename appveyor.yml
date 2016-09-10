@@ -26,12 +26,12 @@ install:
       redis-64\tools\redis-server.exe --service-install
       redis-64\tools\redis-server.exe --service-start
       
-  before_build:
-    - cmd: nuget restore
+before_build:
+  - cmd: nuget restore
     
-  build:
-    project: StackExchange.Redis.Extensions.sln
-    verbosity: minimal
+build:
+  project: StackExchange.Redis.Extensions.sln
+  verbosity: minimal
 
-  test_script:
-    - "%PYTHON%/Scripts/nosetests"
+test_script:
+  - "%PYTHON%/Scripts/nosetests"
