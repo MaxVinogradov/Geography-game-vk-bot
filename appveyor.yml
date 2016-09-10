@@ -21,10 +21,10 @@ init:
 install:
   - "%PYTHON%/Scripts/pip.exe install nose"
   - "%PYTHON%/Scripts/pip.exe install coverage"
-  cmd: >-
-    nuget install redis-64 -excludeversion
-    redis-64\tools\redis-server.exe --service-install
-    redis-64\tools\redis-server.exe --service-start
+  - cmd: >-
+      nuget install redis-64 -excludeversion
+      redis-64\tools\redis-server.exe --service-install
+      redis-64\tools\redis-server.exe --service-start
       
   before_build:
     - cmd: nuget restore
