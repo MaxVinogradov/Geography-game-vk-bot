@@ -9,6 +9,10 @@ environment:
     - PYTHON: "C:\\Python34"
       PYTHON_VERSION: "3.4.1"
       PYTHON_ARCH: "32"
+    
+    - PYTHON: "C:\\Python35"
+      PYTHON_VERSION: "3.5.1"
+      PYTHON_ARCH: "32"
 
 
 init:
@@ -17,11 +21,10 @@ init:
 install:
   - "%PYTHON%/Scripts/pip.exe install nose"
   - "%PYTHON%/Scripts/pip.exe install coverage"
-  install:
-    - cmd: >-
-      nuget install redis-64 -excludeversion
-      redis-64\tools\redis-server.exe --service-install
-      redis-64\tools\redis-server.exe --service-start
+  cmd: >-
+    nuget install redis-64 -excludeversion
+    redis-64\tools\redis-server.exe --service-install
+    redis-64\tools\redis-server.exe --service-start
       
   before_build:
     - cmd: nuget restore
@@ -30,5 +33,5 @@ install:
     project: StackExchange.Redis.Extensions.sln
     verbosity: minimal
 
-test_script:
-  - "%PYTHON%/Scripts/nosetests"
+  test_script:
+    - "%PYTHON%/Scripts/nosetests"
