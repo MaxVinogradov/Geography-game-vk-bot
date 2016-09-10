@@ -20,7 +20,9 @@ environment:
   
   platform:
     -"x64"
+    
   build_script:
     - "%PYTHON%\\python.exe setup.py bdist_wheel"
+    
   test_script:
     - "nosetests"
