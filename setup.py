@@ -1,5 +1,5 @@
-#simple init test
-import testFunc;
+import testFunc
+
 
 def test_answer():
-    assert test_func.func(3) == 4
+    assert testFunc.func(3) == 4
