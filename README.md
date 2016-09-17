@@ -11,3 +11,5 @@
 
 #### Geography-game-vk-bot is a simple bot that can play geography-game with many vk-users at the same time.
 >#### To start play with bot user should write "start <level>", where level is betweeen 1 and 10.
+
+[![Throughput Graph](https://graphs.waffle.io/MaxVinogradov/Geography-game-vk-bot/throughput.svg)](https://waffle.io/MaxVinogradov/Geography-game-vk-bot/metrics/throughput)
