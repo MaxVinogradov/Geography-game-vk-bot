@@ -6,7 +6,7 @@ redisHost = "localhost"
 redisPort = 6379
 
 # app_id for vk_api
-appID = 0000
+appID = 00000
 # file, where auth data is saved
 authFile = '.auth_data'
 
