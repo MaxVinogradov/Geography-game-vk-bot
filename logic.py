@@ -6,37 +6,53 @@ vk = Integration()
 playersPool = {}
 interruptedGamesPlayersIds = []
 
-while True:
-    for massage in vk.get_unreadable_message()[1:]:
-        body = massage["body"]
-        userId = massage["uid"]
-        if body == controlPhrases["phraseToInitGame"]:
-            if userId not in playersPool:
-                playersPool[userId] = []
-                vk.send_message(userId, botPhrases["startPhrase"])
-            else:
-                vk.send_message(userId, errorPhrases["illegalStartingGame"])
 
-        elif body == controlPhrases["phraseToPauseGame"]:
-            if userId in playersPool and userId not in interruptedGamesPlayersIds:
-                interruptedGamesPlayersIds.append(userId)
-                vk.send_message(userId, botPhrases["pausePhrase"])
-            else:
-                vk.send_message(userId, errorPhrases["illegalPauseGame"])
-
-        elif body == controlPhrases["phraseToResumeGame"]:
-            if userId in playersPool and userId in interruptedGamesPlayersIds:
-                interruptedGamesPlayersIds.remove(userId)
-                vk.send_message(userId, botPhrases["resumePhrase"])
-            else:
-                vk.send_message(userId, errorPhrases["illegalResumingGame"])
-
-        elif body == controlPhrases["phraseToFinishGame"]:
-            if userId in interruptedGamesPlayersIds:
-                interruptedGamesPlayersIds.remove(userId)
-            if userId in playersPool:
-                playersPool.pop(userId)
-                vk.send_message(userId, botPhrases["endPhrase"])                
-            else:
-                vk.send_message(userId, errorPhrases["illegalFinishingGame"])
+def process():
+    while True:
+        for message in vk.get_unreadable_message()[1:]:
+            body = message["body"]
+            user_id = message["uid"]
+            check_start(user_id, body)
+            check_pause(user_id, body)
+            check_resume(user_id, body)
+            check_finish(user_id, body)
     sleep(3)
+
+
+def check_start(user_id, body):
+    if body == controlPhrases["phraseToInitGame"]:
+        if user_id not in playersPool:
+            playersPool[user_id] = []
+            vk.send_message(user_id, botPhrases["startPhrase"])
+        else:
+            vk.send_message(user_id, errorPhrases["illegalStartingGame"])
+
+
+def check_pause(user_id, body):
+    if body == controlPhrases["phraseToPauseGame"]:
+        if user_id in playersPool and user_id not in interruptedGamesPlayersIds:
+            interruptedGamesPlayersIds.append(user_id)
+            vk.send_message(user_id, botPhrases["pausePhrase"])
+        else:
+            vk.send_message(user_id, errorPhrases["illegalPauseGame"])
+
+
+def check_resume(user_id, body):
+    if body == controlPhrases["phraseToResumeGame"]:
+        if user_id in playersPool and user_id in interruptedGamesPlayersIds:
+            interruptedGamesPlayersIds.remove(user_id)
+            vk.send_message(user_id, botPhrases["resumePhrase"])
+        else:
+            vk.send_message(user_id, errorPhrases["illegalResumingGame"])
+
+
+def check_finish(user_id, body):
+    if body == controlPhrases["phraseToFinishGame"]:
+        if user_id in interruptedGamesPlayersIds:
+            interruptedGamesPlayersIds.remove(user_id)
+        if user_id in playersPool:
+            playersPool.pop(user_id)
+            vk.send_message(user_id, botPhrases["endPhrase"])
+        else:
+            vk.send_message(user_id, errorPhrases["illegalFinishingGame"])
+
