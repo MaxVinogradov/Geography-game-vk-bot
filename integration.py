@@ -4,6 +4,7 @@ import webbrowser
 import pickle
 from datetime import datetime, timedelta
 import vk
+import random
 
 
 class Integration:
@@ -51,12 +52,12 @@ class Integration:
         return vk.API(session)
 
     def get_unreadable_message(self):
-        print(self.api.messages.get(filters=1))
+        return self.api.messages.get(filters=1)
 
     def send_message(self, user_id, message, **kwargs):
         data_dict = {
             'user_id': user_id,
-            'message': message,
+            'message': "{0} | {1}".format(random.randint(10000, 99999), message),
         }
         data_dict.update(**kwargs)
         return self.api.messages.send(**data_dict)
