@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!--    <script src="index.js"></script>-->
+    <title>15 минут</title>
+</head>
+
+<body>
+    <button id="createFile">Load text file</button>
+    <button id="run">Run !!!</button>
+    <label for="interval">Interval:
+        <input type="number" placeholder="Interval (minutes)" id="interval" name="interval"> min. </label>
+    <a download="info.txt" id="downloadlink" style="display: none">Download</a>
+    <br>
+    <div id="chart"></div>
+    <div id="data">
+
+    </div>
+    <script>
+        var timeLine = {
+            'time': [],
+            'countOfAllUsers': [],
+            'countOfOnlineUsers': []
+        };
+
+        timeLine.time.push('Time');
+        timeLine.countOfAllUsers.push('All Users');
+        timeLine.countOfOnlineUsers.push('Online');
+
+        function TimePoint() {
+            this.time;
+            this.countOfAllUsers = 0;
+            this.countOfOnlineUsers = 0;
+        }
+
+        function getCurrentTime() {
+            return new Date().toTimeString().slice(0, 8);
+        }
+
+        function addPointToTimeLine(timePoint) {
+            timeLine.time.push(timePoint.time);
+            timeLine.countOfAllUsers.push(timePoint.countOfAllUsers);
+            timeLine.countOfOnlineUsers.push(timePoint.countOfOnlineUsers);
+        }
+
+        function getTimeLine() {
+            return timeLine;
+        }
+
+        function processCalculation() {
+            $.ajax({
+                url: 'https://api.vk.com/method/groups.getMembers?v=5.62&group_id=moto_dtp&fields=online',
+                type: 'GET',
+                dataType: 'jsonp',
+                contentType: 'application/json'
+
+            }).done(function (response) {
+                var timePoint = new TimePoint();
+                timePoint.countOfAllUsers = parseInt(response['response']['count']);
+                response['response']['items'].forEach(function (item, i) {
+                    if (item.online == 1) {
+                        timePoint.countOfOnlineUsers++;
+                    }
+                });
+                timePoint.time = getCurrentTime();
+                addPointToTimeLine(timePoint);
+                console.log(timeLine)
+            });
+        }
+
+        function process() {
+            processCalculation();
+            updateDataOnThePage();
+            refreshDiagramm();
+        }
+
+        $(document).ready(function () {
+
+            $('#run').on('click', function () {
+                console.log(parseInt($('#interval').val()) * 60 * 1000)
+                setInterval(process, parseInt($('#interval').val()) * 60 * 1000);
+            });
+
+            $('#createFile').on('click', function () {
+                var link = document.getElementById('downloadlink');
+                link.href = makeTextFile($('#data').text());
+                //link.style.display = 'block';
+                link.click();
+            });
+
+
+        });
+
+
+        function updateDataOnThePage() {
+            var data = $('#data');
+            data.html('');
+            var timeLine = getTimeLine();
+            var item;
+            for (var i = getTimeLine().time.length - 1; i > 0; i--) {
+                item = getTimeLine();
+                data.append('<span>');
+                data.append('Time = ' + item.time[i] +
+                    ', allUsers = ' + item.countOfAllUsers[i] +
+                    ', online = ' + item.countOfOnlineUsers[i] +
+                    ', offline = ' + (parseInt(item.countOfAllUsers[i]) - parseInt(item.countOfOnlineUsers[i])));
+                data.append('\n</span>');
+                data.append('<br>')
+            }
+        }
+
+        function makeTextFile(text) {
+            var textFile = null;
+            var data = new Blob([text], {
+                type: 'text/plain'
+            });
+
+            // If we are replacing a previously generated file we need to
+            // manually revoke the object URL to avoid memory leaks.
+            if (textFile !== null) {
+                window.URL.revokeObjectURL(textFile);
+            }
+
+            textFile = window.URL.createObjectURL(data);
+
+            return textFile;
+        };
+
+        function refreshDiagramm() {
+            var chart = c3.generate({
+                bindto: '#chart',
+                data: {
+                    x: 'Time',
+                    xFormat: '%H:%M:%S',
+                    columns: [
+                    getTimeLine().time,
+                 //   getTimeLine().countOfAllUsers,
+                    getTimeLine().countOfOnlineUsers
+        ]
+                },
+                axis: {
+                    x: {
+                        type: 'timeseries',
+                        tick: {
+                            format: '%H:%M:%S'
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
